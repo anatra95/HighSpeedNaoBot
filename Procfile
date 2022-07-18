@@ -1,1 +1,1 @@
-﻿web: gunicorn hsnb.wsgi
+﻿worker: python app.py
