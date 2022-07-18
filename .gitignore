@@ -1,1 +1,2 @@
-﻿ngrok.exe
+﻿env/
+ngrok.exe
