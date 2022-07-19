@@ -8,7 +8,8 @@ class choiceList:
         self.list = []
 
         for m in iter:
-            self.list.append(m.group())
+            if m.group(1) != '':
+                self.list.append(m.group(1))
 
     # 제외할 선택지를 전달하면 그것을 제외하고 다시 결정한다.
     def choiceRand(self, *args):

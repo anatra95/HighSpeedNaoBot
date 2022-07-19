@@ -23,16 +23,22 @@ def message_respond(message, say):
     # 유저의 이름을 보존
     user = message['user']
     # message의 텍스트 값으로부터 최대 4개의 선택지를 읽어들이는 매치 오브젝트를 생성합니다. 4개의 그룹이 생성됩니다
-    keyword = re.compile('\!나오쟝\s')
+    keyword = re.compile('\!나오쟝')
     cmdString = keyword.sub('', message['text'], count=1)
 
-    # 선택지를 포함하는 객체 생성
-    question = list.choiceList(re.finditer(r'([\w|\s]+|^\,)+', cmdString))
+    while cmdString[0] == ' ':
+        cmdString = cmdString.lstrip()
 
-    if not question.list:
+    # 선택지를 포함하는 객체 생성
+    question = list.choiceList(re.finditer(r'(?:([^\,]*),?)', cmdString))
+
+    if len(question.list) < 2:
         say('부르셨심니껴? 뭔가 못 정하겠으면 \"!나오쟝 짜장면,짬뽕\"과 같이 말씀해주이소.')
         return
-
+    
+    print('debug...')
+    for i in question.list:
+        print(i)
     # 랜덤 값 반환
     say(f'제 생각엔 {question.choiceRand()}이(가) 좋을 것 같심니더.')
     return
