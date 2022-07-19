@@ -36,9 +36,6 @@ def message_respond(message, say):
         say('부르셨심니껴? 뭔가 못 정하겠으면 \"!나오쟝 짜장면,짬뽕\"과 같이 말씀해주이소.')
         return
     
-    print('debug...')
-    for i in question.list:
-        print(i)
     # 랜덤 값 반환
     say(f'제 생각엔 {question.choiceRand()}이(가) 좋을 것 같심니더.')
     return
