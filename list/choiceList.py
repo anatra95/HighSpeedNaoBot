@@ -1,7 +1,7 @@
 import random
 
 # sre.match Object를 요소로 포함시킨다
-class choiceList:
+class ChoiceList:
     def __init__(self, iter):
         # 객체 생성 시, iterator를 요구한다. (re.finditer()로 생성한 것)
         # iterator의 문자열 요소를 포함하는 리스트를 보존한다.

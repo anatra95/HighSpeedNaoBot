@@ -3,17 +3,20 @@
 
 import os
 import re
-import random
 
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 import list
+import sp
 
 # Initialize App with bot token
 # 봇 토큰을 환경변수에서 읽어와서 앱을 초기화합니다.
 app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
 
+singleSpObj  = sp.singleSp(f"sp/singleSp.json")
+forceSpObj   = sp.forceSp(f"sp/forceSp.json")
+passiveSpObj = sp.forceSp(f"sp/passiveSp.json")
 # Listens to incoming messages that contain "!나오쟝"
 # "!나오쟝"을 포함하는 메시지를 인식합니다.
 @app.message(re.compile("!나오쟝"))
@@ -30,15 +33,37 @@ def message_respond(message, say):
         cmdString = cmdString.lstrip()
 
     # 선택지를 포함하는 객체 생성
-    question = list.choiceList(re.finditer(r'(?:([^\,]*),?)', cmdString))
+    question = list.ChoiceList(re.finditer(r'(?:([^\,]*),?)', cmdString))
 
+
+    # 랜덤 처리 전, 특정 패턴을 검사한다.
+    if saySp(say,singleSpObj,question.list):
+        return True
+    elif saySp(say,forceSpObj,question.list):
+        return True
+
+    # 특정 패턴에 매치하지 않았을 경우, 리스트의 길이가 2 미만일 때 안내 메시지 출력
     if len(question.list) < 2:
         say('부르셨심니껴? 뭔가 못 정하겠으면 \"!나오쟝 짜장면,짬뽕\"과 같이 말씀해주이소.')
-        return
+        return True
     
-    # 랜덤 값 반환
-    say(f'제 생각엔 {question.choiceRand()}이(가) 좋을 것 같심니더.')
-    return
+    # 랜덤 값 생성
+    answer = question.choiceRand()
+    # 랜덤 값 전달 전 특정 패턴 검사
+    if saySp(say,passiveSpObj,[answer]):
+        return True
+    # 랜덤 값 전달
+    say(f'제 생각엔 {answer}이(가) 좋을 것 같심니더.')
+    return True
+
+# 특수 패턴 출력 함수
+def saySp(say,spObj,choiceList):
+    value = spObj.search(choiceList)
+    if value:
+        say(value)
+        return True
+    else:
+        return False
 
 # Start App
 # 앱 기동
