@@ -9,6 +9,7 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 import list
 import sp
+import postfix
 
 # Initialize App with bot token
 # 봇 토큰을 환경변수에서 읽어와서 앱을 초기화합니다.
@@ -53,7 +54,7 @@ def message_respond(message, say):
     if saySp(say,passiveSpObj,[answer]):
         return True
     # 랜덤 값 전달
-    say(f'제 생각엔 {answer}이(가) 좋을 것 같심니더.')
+    say(f'제 생각엔 {answer}{postfix.post(answer)} 좋을 것 같심니더.')
     return True
 
 # 특수 패턴 출력 함수
