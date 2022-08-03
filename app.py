@@ -10,6 +10,7 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 import list
 import sp
 import postfix
+import strCommon
 
 # Initialize App with bot token
 # 봇 토큰을 환경변수에서 읽어와서 앱을 초기화합니다.
@@ -24,18 +25,22 @@ passiveSpObj = sp.forceSp(f"sp/passiveSp.json")
 
 # 반응하여 메시지를 보냅니다
 def message_respond(message, say):
+    print("receiving!")
     # 유저의 이름을 보존
     user = message['user']
     # message의 텍스트 값으로부터 최대 4개의 선택지를 읽어들이는 매치 오브젝트를 생성합니다. 4개의 그룹이 생성됩니다
     keyword = re.compile('\!나오쟝')
     cmdString = keyword.sub('', message['text'], count=1)
 
-    while cmdString[0] == ' ':
-        cmdString = cmdString.lstrip()
+    # 공백제거
+    cmdString = strCommon.stripAll(cmdString)
+
+    if not cmdString:
+        sayGuide(say)
+        return True
 
     # 선택지를 포함하는 객체 생성
     question = list.ChoiceList(re.finditer(r'(?:([^\,]*),?)', cmdString))
-
 
     # 랜덤 처리 전, 특정 패턴을 검사한다.
     if saySp(say,singleSpObj,question.list):
@@ -45,14 +50,18 @@ def message_respond(message, say):
 
     # 특정 패턴에 매치하지 않았을 경우, 리스트의 길이가 2 미만일 때 안내 메시지 출력
     if len(question.list) < 2:
-        say('부르셨심니껴? 뭔가 못 정하겠으면 \"!나오쟝 짜장면,짬뽕\"과 같이 말씀해주이소.')
+        sayGuide(say)
         return True
     
     # 랜덤 값 생성
     answer = question.choiceRand()
+    # 공백제거
+    answer = strCommon.stripAll(answer)
+
     # 랜덤 값 전달 전 특정 패턴 검사
     if saySp(say,passiveSpObj,[answer]):
         return True
+        
     # 랜덤 값 전달
     say(f'제 생각엔 {answer}{postfix.post(answer)} 좋을 것 같심니더.')
     return True
@@ -65,6 +74,10 @@ def saySp(say,spObj,choiceList):
         return True
     else:
         return False
+
+def sayGuide(say):
+    say('부르셨심니껴? 뭔가 못 정하겠으면 \"!나오쟝 짜장면,짬뽕\"과 같이 말씀해주이소.')
+    return True
 
 # Start App
 # 앱 기동
