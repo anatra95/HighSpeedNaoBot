@@ -9,7 +9,7 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 import list
 import sp
-import postfix
+import korean
 import strCommon
 
 # Initialize App with bot token
@@ -19,6 +19,8 @@ app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
 singleSpObj  = sp.singleSp(f"sp/singleSp.json")
 forceSpObj   = sp.forceSp(f"sp/forceSp.json")
 passiveSpObj = sp.forceSp(f"sp/passiveSp.json")
+
+SmootherObj = korean.Smoother(f"korean/smoother.json")
 # Listens to incoming messages that contain "!나오쟝"
 # "!나오쟝"을 포함하는 메시지를 인식합니다.
 @app.message(re.compile("!나오쟝"))
@@ -63,7 +65,7 @@ def message_respond(message, say):
         return True
         
     # 랜덤 값 전달
-    say(f'제 생각엔 {answer}{postfix.post(answer)} 좋을 것 같심니더.')
+    combineAnswer(say,answer)
     return True
 
 # 특수 패턴 출력 함수
@@ -76,8 +78,25 @@ def saySp(say,spObj,choiceList):
         return False
 
 def sayGuide(say):
+    # 답변할 수 있는 질문이 아닐 때 출력하는 기본 메시지이다.
     say('부르셨심니껴? 뭔가 못 정하겠으면 \"!나오쟝 짜장면,짬뽕\"과 같이 말씀해주이소.')
     return True
+
+def combineAnswer(say,answer):
+    # 주 답변 내용의 앞 뒤는 일단 보류한다
+    prephrase = '제 생각엔'
+
+    # Smoother 오브젝트의 메서드 .convert() 실행하여
+    # 부드럽게 다듬기 알맞은 문자열이 포함되어있는지, 검색하고 변환한다
+    mainAnswer = SmootherObj.convert(answer)
+    # 만일 변환한 내용이 없다면 기본적인 조사처리만 한다
+    if mainAnswer is False:
+        mainAnswer = f'{answer}{korean.post(answer)}'
+
+    postphrase = '좋을 것 같심니더.'
+
+    #실제로 문장을 출력한다
+    say(f'{prephrase} {mainAnswer} {postphrase}')
 
 # Start App
 # 앱 기동
