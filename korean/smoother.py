@@ -15,7 +15,7 @@ class Smoother:
         for i in self.jsonData:
         
             for j in self.jsonData[i]["key"]:
-                # r".*먹을까\Z"와 같은 정규식 패턴 생성
+                # r".*먹을까\?*\Z"와 같은 정규식 패턴 생성
                 pattern = r".*" + re.escape(j) + r"\?*\Z"
                 m = re.match(pattern, answer)
                 if bool(m):
