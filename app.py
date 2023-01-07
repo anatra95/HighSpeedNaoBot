@@ -89,11 +89,12 @@ def combineAnswer(say,answer):
     # Smoother 오브젝트의 메서드 .convert() 실행하여
     # 부드럽게 다듬기 알맞은 문자열이 포함되어있는지, 검색하고 변환한다
     mainAnswer = SmootherObj.convert(answer)
+    postphrase = ''
+
     # 만일 변환한 내용이 없다면 기본적인 조사처리만 한다
     if mainAnswer is False:
         mainAnswer = f'{answer}{korean.post(answer)}'
-
-    postphrase = '좋을 것 같심니더.'
+        postphrase = '맞는 것 같심니더.'
 
     #실제로 문장을 출력한다
     say(f'{prephrase} {mainAnswer} {postphrase}')
