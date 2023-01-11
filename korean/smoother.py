@@ -21,7 +21,9 @@ class Smoother:
                 if bool(m):
                     # 매치하는 경우, 매치한 key 부분을
                     # smoothen으로 치환하여 반환한다
-                    newAnswer = answer.replace(j, self.jsonData[i]["smoothen"])
+                    subpattern = re.escape(j) + r"\?*\Z"
+                    newAnswer = re.sub(subpattern, self.jsonData[i]["smoothen"], answer)
+           
                     return newAnswer
                 else:
                     continue
