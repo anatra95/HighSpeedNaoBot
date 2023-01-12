@@ -1,4 +1,14 @@
 {
+    "selectelse": {
+        "key": [
+            "다른거", "다른 거", "딴 거", "다른 거는", "딴 거는", "딴거", "다른건", "딴건"
+        ],
+        "answer": "@selectelse",
+        "context": [
+            "system"
+        ],
+        "priority": 0
+    },
     "노래": {
         "key": [
             "노래해라", "노래해봐", "노래해줘", "노래 해 \"줘\"", "노래 해 '줘'"
@@ -7,6 +17,6 @@
         "context": [
             "song","music"
         ],
-        "priority": 0
+        "priority": 2
     }
 }
