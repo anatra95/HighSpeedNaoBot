@@ -28,8 +28,10 @@ class Container:
         except:
             pass
         
-        answer = question.choiceRand()
-
-        self.addA(user,answer)
+        try:
+            answer = question.choiceRand()
+            self.addA(user,answer)
+        except ValueError:
+            answer = "@noanswerremains"
 
         return answer

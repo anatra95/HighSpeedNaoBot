@@ -98,8 +98,14 @@ def runSingleSp(value,choiceList,message):
     if value == "@selectelse":
         user = message['user']
         try:
+            # 딴 거를 고른다
             value = containerObj.selectelse(user)
-            value = combineAnswer(value)
+            # 다른 걸 고를 수 없는 경우
+            if value == "@noanswerremains":
+                value = "이제 고를 수 있는 게 없심더"
+            # 고를 수 있었던 경우 조합한다
+            else:
+                value = combineAnswer(value)
         except KeyError or ValueError:
             value = '죄송한데예, 뭐라 하셨는지 까먹어뿟심다'
     else:
@@ -128,6 +134,11 @@ def combineAnswer(answer):
     fused = f'{prephrase} {mainAnswer} {postphrase}'
     # 조합한 문장을 반환
     return fused
+
+# 콘솔 정리용 더미
+@app.event("message")
+def handle_message_events(body,logger):
+    logger.info(body)
 
 # Start App
 # 앱 기동
