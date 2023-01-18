@@ -93,6 +93,8 @@ def saySp(say,spObj,choiceList,message):
     else:
         return False
 
+# SingleSP의 기능을 실행하는 함수
+# 기능은 "@.."와 같이 문자열로 전달하여 여기서 실행
 def runSingleSp(value,choiceList,message):
     # choiceelse (딴거 선택) singeSp 메서드 실행
     if value == "@selectelse":
